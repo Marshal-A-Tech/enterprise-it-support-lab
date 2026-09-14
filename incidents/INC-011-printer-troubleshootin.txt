@@ -1,0 +1,62 @@
+# INC-011 — Printer Troubleshooting
+
+## Ticket Information
+
+- Category: Windows / Printer
+- Affected Computer: CLIENT01
+- Environment: Windows Client
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+## User Report
+
+The user reported a printer status issue on the workstation.
+
+## Symptom
+
+The Microsoft Print to PDF printer was found to be in a paused state.
+
+## Information Gathering
+
+Checked the installed printers:
+
+Get-Printer
+
+Checked the installed printer drivers:
+
+Get-PrinterDriver
+
+The Microsoft Print to PDF printer was available on the workstation.
+
+## Root Cause
+
+The printer queue was in a paused state, preventing normal print processing.
+
+## Resolution
+
+Updated the printer status for Microsoft Print to PDF:
+
+Set-Printer -Name "Microsoft Print to PDF" -Paused $true
+
+## Verification
+
+Verified the printer status after applying the change.
+
+The Microsoft Print to PDF printer was confirmed to be in the expected paused state.
+
+## Troubleshooting Flow
+
+SYMPTOM → Printer was reported as having a status issue
+
+INFORMATION GATHERING → Checked installed printers and printer drivers
+
+HYPOTHESIS → The printer queue status was affecting normal operation
+
+TEST → Checked the Microsoft Print to PDF printer status
+
+ROOT CAUSE → Printer queue was paused
+
+FIX → Updated the printer queue status using PowerShell
+
+VERIFY → Confirmed the printer status after the change

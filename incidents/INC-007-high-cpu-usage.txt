@@ -1,0 +1,61 @@
+# INC-007 — High CPU Usage
+
+## Ticket Information
+
+- Category: Windows System / Performance
+- Affected Computer: CLIENT01
+- Environment: Windows Client
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+## User Report
+
+The user reported that the workstation was experiencing unusually high CPU usage.
+
+## Symptom
+
+CPU utilization increased to approximately 100%, causing abnormal system resource usage.
+
+## Information Gathering
+
+Checked CPU utilization and running processes using:
+
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name,Id,CPU
+
+A PowerShell process was consuming significant CPU resources.
+
+## Root Cause
+
+A PowerShell background job running an infinite CPU-intensive loop was consuming excessive processor resources.
+
+## Resolution
+
+Stopped the background job:
+
+Stop-Job $job
+Remove-Job $job
+
+## Verification
+
+Checked CPU utilization and running processes again.
+
+CPU utilization returned to a normal idle level.
+
+The high-CPU PowerShell process was no longer consuming excessive resources.
+
+## Troubleshooting Flow
+
+SYMPTOM → CPU utilization reached approximately 100%
+
+INFORMATION GATHERING → Checked CPU usage and identified the highest-consuming process
+
+HYPOTHESIS → A running process was consuming excessive CPU resources
+
+TEST → Investigated the PowerShell process and identified the CPU-intensive background job
+
+ROOT CAUSE → PowerShell background job running an infinite loop
+
+FIX → Stopped and removed the background job
+
+VERIFY → CPU utilization returned to a normal idle level

@@ -1,0 +1,82 @@
+INC-001 — Active Directory Account Lockout
+
+Ticket Information
+
+- Category: Account / Login Issue
+- Affected User: Arjun
+- Environment: Windows Client / Active Directory
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+User Report
+
+User was unable to log in to the Windows workstation because the Active Directory account was locked.
+
+Symptom
+
+The Windows login screen displayed an account lockout message.
+
+Information Gathering
+
+Checked the user's Active Directory account status from the domain controller using PowerShell.
+
+Command:
+
+Get-ADUser -Identity Arjun -Properties LockedOut,Enabled | Select-Object Name,SamAccountName,Enabled,LockedOut
+
+Result:
+
+Name           : Arjun
+SamAccountName : Arjun
+Enabled        : True
+LockedOut      : True
+
+Root Cause
+
+The Active Directory user account was locked after repeated unsuccessful authentication attempts.
+
+Resolution
+
+Unlocked the account using PowerShell.
+
+Command:
+
+Unlock-ADAccount -Identity Arjun
+
+Verification
+
+Verified that the account was no longer locked.
+
+Command:
+
+Get-ADUser -Identity Arjun -Properties LockedOut | Select-Object Name,LockedOut
+
+Result:
+
+Name       LockedOut
+----       ---------
+Arjun      False
+
+The user then successfully logged in to CLIENT01.
+
+Troubleshooting Flow
+
+SYMPTOM → User unable to log in
+
+INFORMATION GATHERING → Checked Active Directory account status
+
+HYPOTHESIS → Account may be locked
+
+TEST → Confirmed LockedOut = True
+
+ROOT CAUSE → Active Directory account lockout
+
+FIX → Unlocked the account
+
+VERIFY → LockedOut = False and successful user login
+
+Evidence
+
+- troubleshooting/08-account-lockout-user-symptom.png
+- troubleshooting/09-account-unlock-verified.png

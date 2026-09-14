@@ -1,0 +1,76 @@
+# INC-009 — Application Launch Failure
+
+## Ticket Information
+
+- Category: Windows Application / Troubleshooting
+- Affected Computer: CLIENT01
+- Environment: Windows Client
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+## User Report
+
+The user reported that an application could not be launched from the workstation.
+
+## Symptom
+
+The application failed to start because Windows could not find the specified executable.
+
+The attempted application path was:
+
+C:\Fakeapp\company.exe
+
+## Information Gathering
+
+Attempted to launch the application using:
+
+Start-Process "C:\Fakeapp\company.exe"
+
+Windows returned an error indicating that the specified file could not be found.
+
+Verified whether the executable existed:
+
+Test-Path "C:\Fakeapp\company.exe"
+
+Result:
+
+False
+
+## Root Cause
+
+The configured application executable path was invalid because the specified application file did not exist on the workstation.
+
+## Resolution
+
+Verified the correct location of a valid Windows application using:
+
+Get-Command notepad.exe
+
+Launched the application using:
+
+Start-Process "C:\Windows\System32\notepad.exe"
+
+## Verification
+
+Verified that the application process was running:
+
+Get-Process notepad
+
+The Notepad process was successfully running, confirming that application launch functionality was working.
+
+## Troubleshooting Flow
+
+SYMPTOM → Application failed to launch
+
+INFORMATION GATHERING → Checked the application path and attempted to start the executable
+
+HYPOTHESIS → The application executable or configured path was incorrect
+
+TEST → Used Test-Path to verify whether the executable existed
+
+ROOT CAUSE → The specified executable path was invalid and the application file was not present
+
+FIX → Verified the correct executable path and launched a valid application
+
+VERIFY → Confirmed the application process was running successfully

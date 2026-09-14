@@ -1,0 +1,86 @@
+# INC-010 — DHCP and Network Troubleshooting
+
+## Ticket Information
+
+- Category: Network / DHCP
+- Affected Computer: CLIENT01
+- Environment: Windows Client / Active Directory
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+## User Report
+
+The workstation required network configuration and connectivity verification after being configured to obtain its IP address automatically.
+
+## Symptom
+
+CLIENT01 needed to obtain its network configuration from the DHCP server instead of using a manually assigned IP address.
+
+## Information Gathering
+
+Checked the client's IP configuration:
+
+ipconfig /all
+
+The workstation received:
+
+- IPv4 Address: 192.168.10.100
+- Subnet Mask: 255.255.255.0
+- DHCP Server: 192.168.10.10
+- DNS Server: 192.168.10.10
+- DNS Suffix: lab.local
+
+Verified connectivity to the domain controller:
+
+ping 192.168.10.10
+
+Verified DNS resolution:
+
+nslookup lab.local
+
+Verified domain controller discovery:
+
+nltest /dsgetdc:lab.local
+
+## Root Cause
+
+The workstation required DHCP-based network configuration. The DHCP server on DC01 was configured with the Office-LAN scope and provided the correct IP, DNS, and domain configuration to CLIENT01.
+
+## Resolution
+
+Configured CLIENT01 to obtain its IP address and DNS configuration automatically through DHCP.
+
+The DHCP scope was configured to provide:
+
+- IP Range: 192.168.10.100 – 192.168.10.200
+- Subnet Mask: 255.255.255.0
+- DNS Server: 192.168.10.10
+- DNS Domain: lab.local
+
+## Verification
+
+CLIENT01 successfully received a DHCP lease with the expected network configuration.
+
+The following tests were successful:
+
+- Ping to DC01
+- DNS resolution for lab.local
+- Domain controller discovery using nltest
+- Communication with the Active Directory environment
+
+## Troubleshooting Flow
+
+SYMPTOM → Workstation required automatic network configuration
+
+INFORMATION GATHERING → Checked IP configuration, DHCP assignment, DNS resolution, and domain controller discovery
+
+HYPOTHESIS → DHCP configuration needed to provide valid network and DNS settings
+
+TEST → Verified the DHCP lease and tested connectivity, DNS, and domain discovery
+
+ROOT CAUSE → CLIENT01 required correct DHCP-provided network configuration for reliable domain connectivity
+
+FIX → Configured CLIENT01 for DHCP and verified the DHCP scope settings
+
+VERIFY → Confirmed valid DHCP lease, DC connectivity, DNS resolution, and domain controller discovery

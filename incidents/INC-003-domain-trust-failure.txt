@@ -1,0 +1,72 @@
+INC-003 — Active Directory Domain Trust Relationship Failure
+
+Ticket Information
+
+- Category: Active Directory / Domain Login
+- Affected Device: CLIENT01
+- Environment: Windows Client / Active Directory
+- Domain: lab.local
+- Severity: High
+- Status: Resolved
+
+User Report
+
+The user was unable to log in to CLIENT01 because the workstation's trust relationship with the domain was broken.
+
+Symptom
+
+Windows displayed the following message:
+
+"The security database on the server does not have a computer account for this workstation trust relationship."
+
+Information Gathering
+
+Checked whether CLIENT01 had a corresponding computer account in Active Directory.
+
+PowerShell command:
+
+Get-ADComputer -Identity "CLIENT01"
+
+The computer account was not found.
+
+Checked the available computer accounts:
+
+Get-ADComputer -Filter * | Select-Object Name
+
+CLIENT01 was missing from the Active Directory computer accounts.
+
+Root Cause
+
+The CLIENT01 computer account was missing from Active Directory, and the workstation was unable to establish a valid trust relationship with the domain controller.
+
+Resolution
+
+Created the CLIENT01 computer account in the correct Organizational Unit:
+
+OU=Office,OU=Computers,OU=Company,DC=lab,DC=local
+
+Restored the workstation's network connection to the domain controller.
+
+The secure channel was repaired and the domain trust relationship was restored.
+
+Verification
+
+Verified that CLIENT01 could communicate with the domain controller.
+
+The user was able to access domain resources again, including the HR shared folder.
+
+Troubleshooting Flow
+
+SYMPTOM → Domain login failed with a trust relationship error
+
+INFORMATION GATHERING → Checked CLIENT01 computer account in Active Directory
+
+HYPOTHESIS → Computer account or secure channel problem
+
+TEST → Get-ADComputer confirmed CLIENT01 was missing
+
+ROOT CAUSE → CLIENT01 computer account was missing and domain communication was unavailable
+
+FIX → Recreated the computer account, restored network connectivity, and repaired the domain trust
+
+VERIFY → Domain resources were accessible and the user successfully accessed the HR share

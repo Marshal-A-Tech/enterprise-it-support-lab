@@ -1,0 +1,66 @@
+# INC-004 — GPO Drive Mapping Failure
+
+## Ticket Information
+
+- Category: Group Policy / Network Drive
+- Affected User: Arjun
+- Environment: Windows Client / Active Directory
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+## User Report
+
+The user reported that the HR shared drive was no longer available on the workstation.
+
+## Symptom
+
+The H: drive was previously mapped through Group Policy but remained available after the GPO link was disabled.
+
+## Information Gathering
+
+Checked the applied Group Policy results using:
+
+gpresult /r
+
+The HR-Drive-Mapping GPO was shown as filtered because its link was disabled.
+
+The existing H: drive mapping was still present on the workstation.
+
+## Root Cause
+
+The GPO drive mapping was configured with the Update action. Disabling the GPO link prevented the policy from applying again, but did not remove the existing drive mapping.
+
+## Resolution
+
+Temporarily changed the Drive Map action from Update to Delete and applied Group Policy.
+
+After the policy was processed, the H: drive was removed.
+
+The Drive Map action was then restored to Update.
+
+## Verification
+
+Forced Group Policy processing and signed in again.
+
+The H: drive was successfully mapped to:
+
+\\DC01\HR
+
+The HR shared drive was accessible to the user.
+
+## Troubleshooting Flow
+
+SYMPTOM → HR network drive was not behaving as expected
+
+INFORMATION GATHERING → Checked Group Policy results and existing drive mapping
+
+HYPOTHESIS → GPO link status and Drive Map action were affecting the existing mapping
+
+TEST → Disabled GPO link and checked gpresult
+
+ROOT CAUSE → Update action does not remove an existing drive mapping when the GPO is disabled
+
+FIX → Used Delete action to remove the existing mapping, then restored Update
+
+VERIFY → H: drive was successfully mapped to \\DC01\HR and access was restored

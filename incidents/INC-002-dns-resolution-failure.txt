@@ -1,0 +1,82 @@
+INC-002 — DNS Resolution Failure
+
+Ticket Information
+
+- Category: Network / DNS
+- Affected Device: CLIENT01
+- Environment: Windows Client / Active Directory
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+User Report
+
+The workstation could communicate with the domain controller by IP address, but DNS-based name resolution was not working correctly.
+
+Symptom
+
+CLIENT01 was unable to resolve domain hostnames using its configured DNS server.
+
+Information Gathering
+
+Checked network connectivity and DNS resolution.
+
+The client could successfully reach the domain controller by IP address.
+
+Test:
+
+ping 192.168.10.10
+
+Result:
+
+Successful
+
+DNS resolution was then tested:
+
+nslookup lab.local
+
+The DNS query failed because CLIENT01 was configured to use an incorrect DNS server.
+
+Root Cause
+
+CLIENT01 was configured with 8.8.8.8 as its DNS server instead of the internal Active Directory DNS server.
+
+Resolution
+
+Changed the client's DNS server back to the domain controller:
+
+192.168.10.10
+
+Verification
+
+Tested DNS resolution again:
+
+nslookup lab.local
+
+Also verified domain controller discovery:
+
+nltest /dsgetdc:lab.local
+
+Both tests completed successfully.
+
+Troubleshooting Flow
+
+SYMPTOM → DNS name resolution failure
+
+INFORMATION GATHERING → Tested IP connectivity and DNS resolution
+
+HYPOTHESIS → Incorrect DNS configuration
+
+TEST → Checked configured DNS server and tested nslookup
+
+ROOT CAUSE → CLIENT01 was using 8.8.8.8 instead of the internal DNS server
+
+FIX → Changed DNS server to 192.168.10.10
+
+VERIFY → nslookup and domain controller discovery successful
+
+Evidence
+
+- troubleshooting/02-dns-failure-diagnosis.png
+- troubleshooting/03-dns-client-fixed.png
+- troubleshooting/01-client-dns-domain-verification.png

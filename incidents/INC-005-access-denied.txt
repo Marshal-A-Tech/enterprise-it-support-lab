@@ -1,0 +1,70 @@
+# INC-005 — Access Denied to HR Shared Folder
+
+## Ticket Information
+
+- Category: File Share / Access Control
+- Affected User: Marshal
+- Environment: Windows Client / Active Directory
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+## User Report
+
+The user reported that access to the HR shared folder was denied.
+
+## Symptom
+
+The user received an Access Denied error when attempting to open:
+
+\\DC01\HR
+
+## Information Gathering
+
+Verified the logged-in user:
+
+whoami
+
+Result:
+
+lab\marshal
+
+Checked the user's Active Directory group memberships:
+
+whoami /groups
+
+The user was a member of IT-Support but was not a member of HR-Staff.
+
+## Root Cause
+
+The user did not have membership in the HR-Staff security group, which was required for access to the HR shared folder.
+
+## Resolution
+
+Added the user Marshal to the HR-Staff security group:
+
+Add-ADGroupMember -Identity "HR-Staff" -Members "Marshal"
+
+## Verification
+
+The user accessed:
+
+\\DC01\HR
+
+Access to the HR shared folder was successfully restored.
+
+## Troubleshooting Flow
+
+SYMPTOM → Access Denied when opening the HR shared folder
+
+INFORMATION GATHERING → Verified user identity and Active Directory group memberships
+
+HYPOTHESIS → User may be missing the required security group membership
+
+TEST → Checked group membership using whoami /groups
+
+ROOT CAUSE → Marshal was not a member of HR-Staff
+
+FIX → Added Marshal to the HR-Staff security group
+
+VERIFY → User successfully accessed the HR shared folder

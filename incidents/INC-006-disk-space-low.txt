@@ -1,0 +1,66 @@
+# INC-006 — Low Disk Space
+
+## Ticket Information
+
+- Category: Windows System / Disk Space
+- Affected Computer: CLIENT01
+- Environment: Windows Client
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+## User Report
+
+The user reported that the Windows workstation had very low available disk space.
+
+## Symptom
+
+The C: drive showed approximately 13.89 GB of free space.
+
+## Information Gathering
+
+Checked the available disk space using:
+
+Get-PSDrive C
+
+The disk usage indicated that a large amount of storage had been consumed.
+
+Investigated the C:\LabTest directory and identified a large test file:
+
+C:\LabTest\LowDiskTest.bin
+
+## Root Cause
+
+A large test file had consumed approximately 60 GB of disk space on the C: drive.
+
+## Resolution
+
+Removed the unnecessary test file:
+
+Remove-Item "C:\LabTest\LowDiskTest.bin"
+
+## Verification
+
+Checked the disk space again:
+
+Get-PSDrive C
+
+Available disk space returned to approximately 68 GB.
+
+The workstation had sufficient free disk space after the file was removed.
+
+## Troubleshooting Flow
+
+SYMPTOM → Low available disk space on the C: drive
+
+INFORMATION GATHERING → Checked disk usage and investigated large files
+
+HYPOTHESIS → A large file or directory was consuming excessive storage
+
+TEST → Investigated C:\LabTest and identified the large test file
+
+ROOT CAUSE → LowDiskTest.bin consumed approximately 60 GB
+
+FIX → Removed the unnecessary test file
+
+VERIFY → Rechecked disk space and confirmed approximately 68 GB was available

@@ -1,0 +1,72 @@
+# INC-008 — Windows Service Failure
+
+## Ticket Information
+
+- Category: Windows System / Service Troubleshooting
+- Affected Computer: CLIENT01
+- Environment: Windows Client
+- Domain: lab.local
+- Severity: Medium
+- Status: Resolved
+
+## User Report
+
+The user reported that a Windows service was not running correctly.
+
+## Symptom
+
+The Windows Update service was found to be stopped.
+
+## Information Gathering
+
+Checked the Windows Update service status using:
+
+Get-Service wuauserv
+
+The service status showed:
+
+Stopped
+
+Event Viewer was also checked under:
+
+Windows Logs → System
+
+Service Control Manager events confirmed that the Windows Update service had stopped.
+
+## Root Cause
+
+The Windows Update service was stopped, preventing the service from operating normally.
+
+## Resolution
+
+Started the Windows Update service:
+
+Start-Service wuauserv
+
+## Verification
+
+Checked the service status again:
+
+Get-Service wuauserv
+
+The service status returned:
+
+Running
+
+Event Viewer was checked again and confirmed that the Windows Update service had started successfully.
+
+## Troubleshooting Flow
+
+SYMPTOM → Windows Update service was not running
+
+INFORMATION GATHERING → Checked service status and reviewed Event Viewer
+
+HYPOTHESIS → The Windows Update service had stopped
+
+TEST → Used Get-Service and checked Service Control Manager events
+
+ROOT CAUSE → Windows Update service was stopped
+
+FIX → Started the Windows Update service
+
+VERIFY → Confirmed the service was Running and verified the corresponding Event Viewer event
